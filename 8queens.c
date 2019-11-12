@@ -1,26 +1,30 @@
+// Author: Justin Stevens
+// Date: November 12th, 2019
+// Purpose: Solves 8 queens puzzle from any starting location using stochastic hill-climbing algorithm
+// Possible Improvements: ASCII Art for printing out the solution :-)
+// Possible Bug Tests: With the randomness, I doubt it would get stuck in a loop, but would be good to check possible starting configs
+// References: Peter Norvig's "AI: A Modern Approach" 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <stdbool.h>
+
 
 int conflict_check(int board[8]){
 	int counter=0;
 	for(int i=0; i<8; i++){
 		for(int j=i+1; j<8; j++){
 			if(board[i]==board[j]){
-				// printf("row: %d=%d, %d %d", board[i], board[j], i, j);
 				// if they lie in the same row
 				counter++;
 			}
 			else if(abs(board[i]-board[j])==(j-i)){
 				// if they lie on the same diagonal
-				// printf("%d-%d=%d-%d\n", board[i], board[j], j, i);
-				//printf("diag: %d %d", i, j);
 				counter++;
 			}
 		}
 	}
-	// printf("Number of conflicts is: %d\n", counter);
 	return counter;
 }
 
@@ -74,12 +78,11 @@ void find_best_neighbor(int board[8]){
 	// initializes random number generator
 	int random_swap=rand() % length_array;
 	// adds some stochasticity in how we swap things up :-)
-	board[best_col[random_swap]]=best_row[random_swap];
-	// printf("Heuristic: %d\n", best_heuristic);
-	
+	board[best_col[random_swap]]=best_row[random_swap];	
 }
 
 bool validate_board(int board[8]){
+	// Make sure user enters valid input; otherwise returns false
 	for(int i=0; i<8; i++){
 		if(board[i]<0 || board[i]>7){
 			return false;
@@ -89,6 +92,7 @@ bool validate_board(int board[8]){
 }
 
 void input_board(int board[8]){
+	// Prompts user to enter in a board as 8 integers
 	printf("Please enter a board: ");
 	for(int i=0; i<8; i++){
 		scanf("%d", &board[i]);
@@ -97,14 +101,19 @@ void input_board(int board[8]){
 
 int main(int argc, char ** argv){
 	int board[8];
+	// Continually ask user for a new board while they haven't entered valid
 	do{
 		input_board(board);
 	} while(!validate_board(board));
+	// Track the number of times through the loop
 	int iteration=0;
+	// While there still are conflicts
 	while(conflict_check(board)){
+		// Locally improve using stochastic hill-climbing algorithm
 		find_best_neighbor(board);
 		iteration++;
 	}
+	// Print out solution (Zeb, can you improve below here??)
 	printf("Solution found on %d iteration: \n", iteration);
 	for(int i=0; i<8; i++){
 		printf("Column %d: %d\n", i, board[i]);
