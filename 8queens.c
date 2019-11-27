@@ -10,11 +10,12 @@
 #include <math.h>
 #include <stdbool.h>
 
+#define SIZE 8
 
-int conflict_check(int board[8]){
+int conflict_check(int board[SIZE]){
 	int counter=0;
-	for(int i=0; i<8; i++){
-		for(int j=i+1; j<8; j++){
+	for(int i=0; i<SIZE; i++){
+		for(int j=i+1; j<SIZE; j++){
 			if(board[i]==board[j]){
 				// if they lie in the same row
 				counter++;
@@ -28,10 +29,10 @@ int conflict_check(int board[8]){
 	return counter;
 }
 
-void find_best_neighbor(int board[8]){
+void find_best_neighbor(int board[SIZE]){
 	// make a shallow copy to avoid pointers
-	int neighbor[8];
-	for(int i=0; i<8; i++){
+	int neighbor[SIZE];
+	for(int i=0; i<SIZE; i++){
 		neighbor[i]=board[i];
 	}
 	// this saved variable will be used as the starting position of the column
@@ -43,10 +44,10 @@ void find_best_neighbor(int board[8]){
 	int* best_row=(int *)malloc(1*sizeof(int));
 	// length of array is the length of the above pointers
 	int length_array=1;
-	for(int col=0; col<8; col++){
+	for(int col=0; col<SIZE; col++){
 		// start by saving the current value of the column
 		saved=neighbor[col];
-		for(int row=0; row<8; row++){
+		for(int row=0; row<SIZE; row++){
 			// for all rows that are *not* the original one
 			if(row!=saved){
 				// try updating it
@@ -81,9 +82,9 @@ void find_best_neighbor(int board[8]){
 	board[best_col[random_swap]]=best_row[random_swap];	
 }
 
-bool validate_board(int board[8]){
+bool validate_board(int board[SIZE]){
 	// Make sure user enters valid input; otherwise returns false
-	for(int i=0; i<8; i++){
+	for(int i=0; i<SIZE; i++){
 		if(board[i]<0 || board[i]>7){
 			return false;
 		}
@@ -91,16 +92,16 @@ bool validate_board(int board[8]){
 	return true;
 }
 
-void input_board(int board[8]){
+void input_board(int board[SIZE]){
 	// Prompts user to enter in a board as 8 integers
 	printf("Please enter a board: ");
-	for(int i=0; i<8; i++){
+	for(int i=0; i<SIZE; i++){
 		scanf("%d", &board[i]);
 	}
 }
 
 int main(int argc, char ** argv){
-	int board[8];
+	int board[SIZE];
 	// Continually ask user for a new board while they haven't entered valid
 	do{
 		input_board(board);
@@ -108,15 +109,20 @@ int main(int argc, char ** argv){
 	// Track the number of times through the loop
 	int iteration=0;
 	// While there still are conflicts
-	while(conflict_check(board)){
+	while(conflict_check(board) && iteration<1000){
 		// Locally improve using stochastic hill-climbing algorithm
 		find_best_neighbor(board);
 		iteration++;
 	}
-	// Print out solution (Zeb, can you improve below here??)
-	printf("Solution found on %d iteration: \n", iteration);
-	for(int i=0; i<8; i++){
-		printf("Column %d: %d\n", i, board[i]);
+	if(!conflict_check(board)){
+		// Print out solution (Zeb, can you improve below here??)
+		printf("Solution found on %d iteration: \n", iteration);
+		for(int i=0; i<SIZE; i++){
+			printf("Column %d: %d\n", i, board[i]);
+		}
+	}
+	else{
+		printf("Error: bad starting position\n");
 	}
 	return 0;
 }
