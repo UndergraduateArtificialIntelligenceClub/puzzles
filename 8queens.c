@@ -118,7 +118,15 @@ int main(int argc, char ** argv){
 		// Print out solution (Zeb, can you improve below here??)
 		printf("Solution found on %d iteration: \n", iteration);
 		for(int i=0; i<SIZE; i++){
-			printf("Column %d: %d\n", i, board[i]);
+			for(int j=0; j<SIZE; j++){
+				if(j!=board[i]){
+					printf("-");
+				}
+				else{
+					printf("Q");
+				}
+			}
+			printf("\n");
 		}
 	}
 	else{
