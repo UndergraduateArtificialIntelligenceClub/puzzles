@@ -61,9 +61,9 @@ def solve(IC, population, limit):
 	for _ in range(limit):
 		# Computation we're exhausting
 		new_IC=step(bin_pop, initial_IC)
-		#print(initial_IC)
+		print(initial_IC)
 		if initial_IC==target and new_IC==initial_IC:
-			#print("solved")
+			print("solved")
 			# We've gotten our initial IC to the target
 			return 1
 		else:
@@ -72,7 +72,7 @@ def solve(IC, population, limit):
 			# thinks it's the opposite of what it should be
 			if initial_IC==reverse_target:
 				return 0
-	#print("not solved")
+	print("not solved")
 	return 0
 def compute_results(IP, length, cutoff):
 	"""Test to see how well 100 IP's do on a list of randomly generated IC's"""
@@ -160,5 +160,5 @@ def main():
 		new=evolve(best, 80, 0.35)
 		IP=best+new
 #main()
-#compute_results([3548939912], 19, 1)
-compute_results([4219896520, 3493691528, 3641240712, 3641240456, 3548939912], 149, 5)
+compute_results([3548939912], 29, 1)
+#compute_results([4219896520, 3493691528, 3641240712, 3641240456, 3548939912], 149, 5)
